@@ -1,4 +1,3 @@
-
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -13,8 +12,8 @@
 
 
 // ############################### DO-NOT-TOUCH SETTINGS ###############################
-#define PWM_FREQ            20000     // [تعديل] 20 كيلو هرتز لتشغيل صامت تماماً (FOC)
-#define DEAD_TIME              120    // [تعديل] زيادة زمن الحماية للموسفتات
+#define PWM_FREQ            20000     // 20 كيلو هرتز لتشغيل صامت تماماً (FOC)
+#define DEAD_TIME              120    // زيادة زمن الحماية للموسفتات
 #define DELAY_IN_MAIN_LOOP    5     
 #define TIMEOUT                20     
 #define A2BIT_CONV             50     
@@ -29,7 +28,7 @@
 
 // ############################### BATTERY (إعدادات المحول 48 فولت) ###############################
 #define BAT_FILT_COEF           655       
-#define BAT_CALIB_REAL_VOLTAGE  4800      // [تعديل] معايرة لجهد 48 فولت
+#define BAT_CALIB_REAL_VOLTAGE  4800      // معايرة لجهد 48 فولت
 #define BAT_CALIB_ADC           1492      
 #define BAT_CELLS               10        
 #define BAT_LVL2_ENABLE         0         
@@ -57,14 +56,18 @@
 #define SPD_MODE        2               
 #define TRQ_MODE        3               
 
-#define MOTOR_LEFT_ENA                  // تفعيل المحرك
+// تفعيل مخارج كلا المحركين للعمل معاً بكارت واحد مدمج
+#define MOTOR_LEFT_ENA                  
 #define MOTOR_RIGHT_ENA                 
 
-// [تعديل] تفعيل التشغيل الصامت وتثبيت السرعة
+// تشغيل المخارج لـ (محركين) لتغذية الجانبين الأيمن والأيسر معاً
+#define N_MOTORS                2
+
+// تفعيل التشغيل الصامت وتثبيت السرعة
 #define CTRL_TYP_SEL    FOC_CTRL        
 #define CTRL_MOD_REQ    SPD_MODE        
 
-// [تعديل] قيود التيار لحماية محول 300 واط
+// قيود التيار لحماية محول 300 واط
 #define I_MOT_MAX       6.0             // تيار المحرك الآمن
 #define I_DC_MAX        5
 // تيار الدخل الأقصى للمحول
@@ -78,7 +81,8 @@
 #define INACTIVITY_TIMEOUT        0       // منع الإغلاق التلقائي
 #define BEEPS_BACKWARD            0       
 
-// [تعديل] إعدادات الإقلاع الناعم (Soft Start) لمروحة السيروكو
+// إعدادات الإقلاع الناعم (Soft Start) لحماية منظومة التشغيل والملفات
+#define SOFT_START
 #define DEFAULT_RATE              20      // إقلاع ناعم جداً (Ramp)
 #define SOFT_START_MS             7000    // الوصول للسرعة خلال 7 ثوانٍ
 #define SPEED_RPM_REQ             700     // السرعة المطلوبة للمروحة
@@ -88,19 +92,18 @@
 
 #define DEFAULT_FILTER              6553  
 #define DEFAULT_SPEED_COEFFICIENT   16384 
-#define DEFAULT_STEER_COEFFICIENT   0     // إلغاء التوجيه للمروحة
+#define DEFAULT_STEER_COEFFICIENT   0     // إلغاء التوجيه لجعل المحركين يدوران بنفس التزامن
 // ######################### END OF DEFAULT SETTINGS ##########################
 
 
 // ############################## INPUT FORMAT ############################
 #ifdef VARIANT_ADC
   #define CONTROL_ADC         1           
-  #define PRI_INPUT1            1, 0, 0, 4095, 0      // نوع 1 للتحكم بالسرعة عبر المقاومة
-  #define PRI_INPUT2            0, 0, 0, 4095, 0      
+  #define PRI_INPUT1            1, 0, 0, 4095, 0      // التحكم بالسرعة عبر المقاومة المتغيرة الأولى
+  #define PRI_INPUT2            1, 0, 0, 4095, 0      // ربط المقاومة المتغيرة لتدوير المحرك الثاني متزامناً مع الأول
   #define FLASH_WRITE_KEY       0x1001    
 #endif
 // ############################# END OF VARIANT_ADC SETTINGS #########################
 
-// (بقية ملفات الـ Variants تم إطفاؤها تلقائياً لأننا اخترنا VARIANT_ADC في الأعلى)
+#end
 
-#endif /* CONFIG_H */
